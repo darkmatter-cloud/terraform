@@ -1,0 +1,11 @@
+# Do not Push bin Directory
+bin
+
+# Do not Push .terraform
+**/.terraform/
+
+# Do not Push workspaces/stack/README.*.md Files
+workspaces/**/README.*.md
+
+# Ignore vscode
+.vscode
