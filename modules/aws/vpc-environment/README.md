@@ -7,35 +7,47 @@ This terraform module provisions an environment in an AWS Virtual Private Cloud 
 ## Components
 
 * Virtual Private Cloud
+
     * Subnets 
         * Public Subnets across mapped Availability Zones
         * Private Subnets across mapped Availability Zones
+
     * Route Tables
         * Public Route Table (associated to all Public Subnets)
         * Private Route Table (associated to all Private Subnets)
+
     * Internet Gateway (igw)
         * For Public Subnet Inbound/Outbound Access to Internet
+
     * NAT Gateway (ngw)
         * For Private Subnet Outbound Access to Internet
-    * Network Access Control List
+
+    * Network Access Control List (acl)
         * Inbound Rules
         * Outbound Rules
+
     * Firewall Security Groups
         * Public Inbound Rules
         * Private Inbound Rules
         * Outbound Rules
+
 * Route53 DNS
     * Public Hosted Zone
     * Private Hosted Zone
+
+* SNS Topic
+    * Default SNS Topic for Environment Alerts
+
 * S3 Storage
-    * S3 Bucket
+    * Default S3 Bucket for Environment Storage
         * Versioned
         * Encrypted
         * Default Retention Policies for log/ and tmp/ directory objects
     * S3 VPC Endpoint
         * For Private Network Access to S3
+
 * Encryption
-    * KMS Key for the Environment
+    * Default KMS Encryption Key for the Environment
 
 
 ## Example Module Usage
