@@ -1,15 +1,22 @@
 # Terraform Project
-This is a (terraform)[https://www.terraform.io/] project for (darkmatter.cloud)[https://darkmatter.cloud]
+This is a [terraform](https://www.terraform.io/) project for [darkmatter.cloud](https://darkmatter.cloud)
 
-## Prerequisites
+## Pre-requisites
 There are several things that you will need to get started:
-* An AWS Account
-* An AWS IAM Account w/API Access Keys
-* AWS Credentials Configured
-* Programmer Text Editor or IDE w/ Terraform Support (syntax highlighting, formatting, etc)
-* AWS Command Line Interface Installed
-* Terraform Binary Installed
-* Git Installed
+* Create an [AWS Account](https://aws.amazon.com)
+* Create an [AWS IAM User](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users_create.html) w/API Access Keys
+* Configure your [AWS Credentials](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html)
+* Create an S3 Bucket to store your [Terraform Remote State](https://www.terraform.io/docs/state/remote.html)
+* Install a Programmer Text Editor or IDE w/ Terraform Support (syntax highlighting, formatting, etc)
+    * [Atom](https://atom.io/)
+    * [VS Code](https://visualstudio.microsoft.com/)
+* Install the [AWS Command Line Interface](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-welcome.html)
+* Install the [Terraform](https://www.terraform.io/downloads.html) Binary 
+* Install [git](https://git-scm.com/downloads)
+* Create git repository
+    * [BitBucket](https://bitbucket.org)
+    * [Github](https://github.com)
+    * [Gitlab](https://about.gitlab.com/)
 
 ## Project Setup
 
@@ -71,27 +78,40 @@ There are several things that you will need to get started:
 
 ## Create S3 Bucket (private) to store Terraform Remote State in S3
 
-    #Use AWS Console
-    #Keep this Bucket and all Objects Private
-    #Verify S3 Bucket and AWS Credentials 
-
+    # Use AWS Console or Command Line Interface
+    # Keep this Bucket and all Objects Private
+    # Verify S3 Bucket and AWS Credentials 
     aws s3 ls
     2019-01-01 00:00:00 <your_terraform_bucket>
 
+
+
 ## Create Environment using vpc-environment module
 
+### Create Demo Workspace
+
+    # Create Demo Workspace Directory
+    mkdir workspaces/
     mkdir workspaces/demo
+
+### Create Environment Stack 
+
+    # Create Environment Stack Directory
     mkdir workspaces/demo/environment
     cd workspaces/demo/environment
 
     # Create backend.tf to configure remote S3 backend
+    
     # Create main.tf to deploy module vpc-environment sourced locally
 
-    # List Terraform Workspaces
+    # See examples in module
+
+### List Terraform Workspaces
+
     terraform workspace list
     * default
 
-    # Create New Terraform Workspace 'demo'
+### Create New Terraform Workspace 'demo'
     terraform workspace new demo
     Created and switched to workspace "demo"!
 
@@ -99,16 +119,16 @@ There are several things that you will need to get started:
     so if you run "terraform plan" Terraform will not see any existing state
     for this configuration.
 
-    # Verify Workspace
+### Verify Workspace
+    
     terraform workspace list
     default
     * demo
 
-    # Verify S3 Remote State
-    aws s3 ls s3://<your_terraform_bucket>/env:/demo/
-    2019-01-01 00:00:00        282 environment
-    
-    # Run Terraform Init
+### Run Terraform Init
+Run Terraform Init to initialize the terraform backend and modules
+
+    cd workspaces/demo/environment/
     terraform init
 
     * provider.aws: version = "~> 1.59"
@@ -126,9 +146,20 @@ There are several things that you will need to get started:
     rerun this command to reinitialize your working directory. If you forget, other
     commands will detect it and remind you to do so if necessary.
 
-    # Run Terraform Plan
+### Run Terraform Plan
+Run Terraform Plan to review the resources that will be provisioned in the demo environment:
+   
     cd /workspaces/demo/environment/
     terraform plan
+    ...
+    Plan: 42 to add, 0 to change, 0 to destroy.
+
+
+### Run Terraform Apply
+Run Terraform Apply to review and provision the new demo environment:
+
+    cd /workspaces/demo/environment/
+    terraform apply
     ...
     Plan: 42 to add, 0 to change, 0 to destroy.
 
@@ -145,13 +176,27 @@ There are several things that you will need to get started:
 
     Apply complete! Resources: 42 added, 0 changed, 0 destroyed.
 
-    # Run Terraform Plan
+### Verify via Terraform Plan
+Verify the state via terraform plan:
+
     cd /workspaces/demo/environment/
     terraform plan
 
-    # We now see 2 to change, this is because the Security Groups (Public/Private) are Calculating Variables
+    # We now see 2 to change, this is because the Security Groups (Public/Private) 
+    # are calculating rules based on variables we're passing the module
     Plan: 0 to add, 2 to change, 0 to destroy.
 
-    # Run Terraform Destroy
+### Run Terraform Destroy
+Once you are done working, simply destroy the environment:
+
+    cd /workspaces/demo/environment/
+    terraform destroy
+
     Destroy complete! Resources: 42 destroyed.
 
+## SUCCESS!
+Congratulations!!! 
+You now have a working demo environment in AWS that you can spin up an down to develop, test, and demo new solutions.
+
+## NEXT STEPS >
+From here you can layer on additional stacks such as needed. See the local modules directory to get started.
